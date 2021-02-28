@@ -1,19 +1,13 @@
-﻿using System;
-
-namespace MaterialFader.Messages
+﻿namespace MaterialFader.Messages
 {
     public class StateChangeMessageParser : IMessageParser
     {
-        public IMessage Parse(string msg)
-        {
-            var parts = msg.Split("=");
-            if (parts.Length != 2 || !string.Equals(parts[0], "state", StringComparison.OrdinalIgnoreCase))
-            {
-                return null;
-            }
+        public string Command => "State";
 
-            return new StateChangeMessage(parts[1]);
-        }
+        public ArgumentRange Arguments => ArgumentRange.Single;
+
+        public IMessage Parse(string _, string[] args)
+            => new StateChangeMessage(args[0]);
 
         private class StateChangeMessage : IStateChangeMessage
         {

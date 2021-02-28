@@ -1,18 +1,19 @@
-﻿using System;
-
-namespace MaterialFader.Messages
+﻿namespace MaterialFader.Messages
 {
     public class BlinkSpeedMessageParser : IMessageParser
     {
-        public IMessage Parse(string msg)
+        public string Command => "BlinkSpeed";
+
+        public ArgumentRange Arguments => ArgumentRange.Single;
+
+        public IMessage Parse(string _, string[] args)
         {
-            var parts = msg.Split("=");
-            if (parts.Length != 2 || !string.Equals(parts[0], "blinkspeed", StringComparison.OrdinalIgnoreCase))
+            if (args.Length != 1)
             {
                 return null;
             }
 
-            if (!int.TryParse(parts[1], out var speed))
+            if (!int.TryParse(args[0], out var speed))
             {
                 return null;
             }

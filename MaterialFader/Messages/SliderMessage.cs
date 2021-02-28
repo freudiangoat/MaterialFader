@@ -6,18 +6,14 @@ namespace MaterialFader.Messages
 {
     public class SliderMessageParser : IMessageParser
     {
-        public IMessage Parse(string msg)
-        {
-            var parts = msg.Split("=");
-            if (parts.Length != 2 || !string.Equals(parts[0], "slider", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return null;
-            }
+        public string Command => "Slider";
 
-            return int.TryParse(parts[1], out var percentage)
+        public ArgumentRange Arguments => ArgumentRange.Single;
+
+        public IMessage Parse(string _, string[] args)
+            => int.TryParse(args[0], out var percentage)
                 ? new SliderMessage(percentage)
                 : null;
-        }
 
         private class SliderMessage : ISliderMessage
         {

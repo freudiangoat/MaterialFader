@@ -2,20 +2,22 @@
 {
     public class ButtonMessageParser : IMessageParser
     {
-        public IMessage Parse(string msg)
+        public string Command => null;
+
+        public ArgumentRange Arguments => ArgumentRange.Single;
+
+        public IMessage Parse(string command, string[] args)
         {
-            var buttonName = msg;
+            var buttonName = command;
             var stateName = "";
 
-            var parts = msg.Split("=");
-            if (parts.Length > 2)
+            if (args.Length > 1)
             {
                 return null;
             }
-            else if (parts.Length == 2)
+            else if (args.Length == 1)
             {
-                buttonName = parts[0];
-                stateName = parts[1];
+                stateName = args[0];
             }
 
             if (!stateName.AsEnum<FaderPortLightState>(out var state))
