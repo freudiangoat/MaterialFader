@@ -135,21 +135,20 @@ namespace MaterialFader
 
             var radioGroup = GetRadioGroup(button);
 
-            if (radioGroup != null)
+            if (radioGroup == null)
             {
-                if (!on)
-                {
-                    return;
-                }
-
-                foreach (var btn in radioGroup)
-                {
-                    _lightState[btn] = FaderPortLightState.Off;
-                    _outputDevice.SendEvent(new NoteAftertouchEvent(Out((byte)btn), Out(false)));
-                }
+                _outputDevice.SendEvent(new NoteAftertouchEvent(Out((byte)button), Out(on)));
+                return;
             }
 
-            _outputDevice.SendEvent(new NoteAftertouchEvent(Out((byte)button), Out(on)));
+            foreach (var btn in radioGroup)
+            {
+                _lightState[btn] = FaderPortLightState.Off;
+                _outputDevice.SendEvent(new NoteAftertouchEvent(Out((byte)btn), Out(false)));
+            }
+
+            _lightState[button] = FaderPortLightState.On;
+            _outputDevice.SendEvent(new NoteAftertouchEvent(Out((byte)button), Out(true)));
         }
 
         public void SetSlider(int position)
