@@ -38,6 +38,9 @@ namespace MaterialFader.StateHandlers
                 case ISliderMessage sliderMessage:
                     _fp.SetSlider(sliderMessage.Position);
                     break;
+                case IRadioMessage radioMessage:
+                    _fp.AddRadioGroup(radioMessage.Name, radioMessage.Buttons);
+                    break;
             }
 
             return _session.Broadcast("received");

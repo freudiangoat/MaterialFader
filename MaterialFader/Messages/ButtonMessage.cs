@@ -20,12 +20,12 @@
                 stateName = args[0];
             }
 
-            if (!stateName.AsEnum<FaderPortLightState>(out var state))
+            if (!stateName.TryAsEnum<FaderPortLightState>(out var state))
             {
                 state = FaderPortLightState.On;
             }
 
-            if (buttonName.AsEnum<FaderPortButton>(out var btn))
+            if (buttonName.TryAsEnum<FaderPortButton>(out var btn))
             {
                 return new ButtonMessage(btn, state);
             }

@@ -11,7 +11,7 @@ namespace MaterialFader
     public class FaderPort : IDisposable
     {
         private readonly IDictionary<FaderPortButton, FaderPortLightState> _lightState = new Dictionary<FaderPortButton, FaderPortLightState>();
-        // private readonly ISet<FaderPortButton> _blinkingButtons = new HashSet<FaderPortButton>();
+        private readonly IDictionary<string, ISet<FaderPortButton>> _radioGroups = new Dictionary<string, ISet<FaderPortButton>>();
         private IInputDevice _inputDevice;
         private IOutputDevice _outputDevice;
         private bool _blinkState;
@@ -133,6 +133,22 @@ namespace MaterialFader
                 return;
             }
 
+            var radioGroup = GetRadioGroup(button);
+
+            if (radioGroup != null)
+            {
+                if (!on)
+                {
+                    return;
+                }
+
+                foreach (var btn in radioGroup)
+                {
+                    _lightState[btn] = FaderPortLightState.Off;
+                    _outputDevice.SendEvent(new NoteAftertouchEvent(Out((byte)btn), Out(false)));
+                }
+            }
+
             _outputDevice.SendEvent(new NoteAftertouchEvent(Out((byte)button), Out(on)));
         }
 
@@ -145,9 +161,36 @@ namespace MaterialFader
             _outputDevice.SendEvent(sliderMoveLo);
         }
 
+        public void AddRadioGroup(string name, IEnumerable<FaderPortButton> buttons)
+        {
+            if (!_radioGroups.TryGetValue(name, out var buttonSet))
+            {
+                buttonSet = new HashSet<FaderPortButton>();
+                _radioGroups[name] = buttonSet;
+            }
+
+            foreach (var btn in buttons)
+            {
+                var oldSet = GetRadioGroup(btn);
+                if (oldSet == buttonSet)
+                {
+                    continue;
+                }
+
+                oldSet?.Remove(btn);
+                buttonSet.Add(btn);
+            }
+        }
+
+        public void RemoveRadioGroup(string name)
+            => _radioGroups.Remove(name);
+
         public event EventHandler<FaderPortButtonEventArgs> OnButtonChange;
 
         public event EventHandler<int> OnSliderChange;
+
+        private ISet<FaderPortButton> GetRadioGroup(FaderPortButton btn)
+            => _radioGroups.FirstOrDefault(g => g.Value.Contains(btn)).Value;
 
         private static SevenBitNumber OutRaw(int val) => (SevenBitNumber)(byte)(val & 0x7F);
 

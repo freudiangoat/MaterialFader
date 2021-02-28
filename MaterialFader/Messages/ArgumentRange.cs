@@ -17,6 +17,9 @@
 
         public static ArgumentRange Single { get; } = new ArgumentRange(1);
 
+        public static ArgumentRange MoreThan(int n) =>
+            new ArgumentRange(n + 1, int.MaxValue);
+
         public int Minimum { get; }
         public int Maximum { get; }
 
