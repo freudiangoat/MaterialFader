@@ -59,12 +59,15 @@ namespace MaterialFader.StateHandlers
             }
 
             _fp.SetLight(evt.Button, FaderPortLightState.Toggle);
-            await _session.Broadcast(evt.Button.ToString());
+
+            var msg = new ButtonMessage(evt.Button, evt.State == FaderPortButtonState.Pushed, FaderPortLightState.Off);
+            await _session.Broadcast(msg);
         }
 
         public async void OnSliderEvent(object sender, int pos)
         {
-            await _session.Broadcast($"slider={pos}");
+            var msg = new SliderMessage(pos);
+            await _session.Broadcast(msg);
         }
     }
 }

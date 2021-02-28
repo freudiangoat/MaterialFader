@@ -1,11 +1,11 @@
-﻿namespace MaterialFader.Messages
+﻿using System;
+
+namespace MaterialFader.Messages
 {
     public interface IMessageParser
     {
         string Command { get; }
 
-        ArgumentRange Arguments { get; }
-
-        IMessage Parse(string command, string[] args);
+        Type MessageType { get; }
     }
 }

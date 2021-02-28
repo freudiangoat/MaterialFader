@@ -1,49 +1,34 @@
-﻿namespace MaterialFader.Messages
+﻿using System;
+using System.Text.Json.Serialization;
+
+namespace MaterialFader.Messages
 {
     public class ButtonMessageParser : IMessageParser
     {
-        public string Command => null;
+        public string Command => "button";
 
-        public ArgumentRange Arguments => ArgumentRange.Single;
+        public Type MessageType => typeof(ButtonMessage);
+    }
 
-        public IMessage Parse(string command, string[] args)
+    public class ButtonMessage : IButtonMessage
+    {
+        public ButtonMessage(FaderPortButton button, bool pressed, FaderPortLightState light)
         {
-            var buttonName = command;
-            var stateName = "";
-
-            if (args.Length > 1)
-            {
-                return null;
-            }
-            else if (args.Length == 1)
-            {
-                stateName = args[0];
-            }
-
-            if (!stateName.TryAsEnum<FaderPortLightState>(out var state))
-            {
-                state = FaderPortLightState.On;
-            }
-
-            if (buttonName.TryAsEnum<FaderPortButton>(out var btn))
-            {
-                return new ButtonMessage(btn, state);
-            }
-
-            return null;
+            Button = button;
+            Pressed = pressed;
+            Light = light;
         }
 
-        private class ButtonMessage : IButtonMessage
-        {
-            public ButtonMessage(FaderPortButton btn, FaderPortLightState state)
-            {
-                Button = btn;
-                Light = state;
-            }
+        [JsonPropertyName("type")]
+        public string Type => "button";
 
-            public FaderPortButton Button { get; }
+        [JsonPropertyName("name")]
+        public FaderPortButton Button { get; }
 
-            public FaderPortLightState Light { get; }
-        }
+        [JsonPropertyName("pressed")]
+        public bool Pressed { get; }
+
+        [JsonPropertyName("light")]
+        public FaderPortLightState Light { get; }
     }
 }

@@ -1,13 +1,12 @@
-﻿namespace MaterialFader.Messages
+﻿using System;
+
+namespace MaterialFader.Messages
 {
     public class StateChangeMessageParser : IMessageParser
     {
         public string Command => "State";
 
-        public ArgumentRange Arguments => ArgumentRange.Single;
-
-        public IMessage Parse(string _, string[] args)
-            => new StateChangeMessage(args[0]);
+        public Type MessageType => typeof(StateChangeMessage);
 
         private class StateChangeMessage : IStateChangeMessage
         {
@@ -15,6 +14,8 @@
             {
                 NewState = state;
             }
+
+            public string Type => "state";
 
             public string NewState { get; }
         }

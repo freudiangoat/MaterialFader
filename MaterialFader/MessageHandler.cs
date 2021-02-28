@@ -26,6 +26,11 @@ namespace MaterialFader
                 return new ValueTask();
             }
 
+            if (msg is IPingMessage)
+            {
+                return session.SendAsync("{\"type\": \"pong\"}");
+            }
+
             if (msg is IStateChangeMessage stateChange)
             {
                 return _stateManager.ChangeState(stateChange.NewState);

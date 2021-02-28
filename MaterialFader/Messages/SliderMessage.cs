@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MaterialFader.Messages
 {
@@ -8,24 +6,21 @@ namespace MaterialFader.Messages
     {
         public string Command => "Slider";
 
-        public ArgumentRange Arguments => ArgumentRange.Single;
+        public Type MessageType => typeof(SliderMessage);
+    }
 
-        public IMessage Parse(string _, string[] args)
-            => int.TryParse(args[0], out var percentage)
-                ? new SliderMessage(percentage)
-                : null;
-
-        private class SliderMessage : ISliderMessage
+    public class SliderMessage : ISliderMessage
+    {
+        public SliderMessage(int percentage)
         {
-            public SliderMessage(int percentage)
-            {
-                Position = (1024 * percentage) / 100;
-                Percentage = percentage;
-            }
-
-            public int Position { get; }
-
-            public int Percentage { get; }
+            Position = (1024 * percentage) / 100;
+            Percentage = percentage;
         }
+
+        public string Type => "analog";
+
+        public int Position { get; }
+
+        public int Percentage { get; }
     }
 }

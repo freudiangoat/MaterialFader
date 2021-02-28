@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MaterialFader.Messages
@@ -7,10 +8,7 @@ namespace MaterialFader.Messages
     {
         public string Command => "Radio";
 
-        public ArgumentRange Arguments { get; } = ArgumentRange.MoreThan(1);
-
-        public IMessage Parse(string command, string[] args)
-            => new RadioMessage(args[0], args.Skip(1).AsValidEnums<FaderPortButton>());
+        public Type MessageType => typeof(RadioMessage);
 
         private class RadioMessage : IRadioMessage
         {
@@ -20,7 +18,10 @@ namespace MaterialFader.Messages
                 Buttons = buttons.ToArray();
             }
 
+            public string Type => "radio";
+
             public string Name { get; }
+
             public IReadOnlyCollection<FaderPortButton> Buttons { get; }
         }
     }

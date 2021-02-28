@@ -2,12 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Melanchall.DryWetMidi" Version="5.1.2" />
+    <!--<PackageReference Include="Melanchall.DryWetMidi" Version="5.1.2" />-->
     <PackageReference Include="SuperSocket.WebSocketServer" Version="2.0.0-beta7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\drywetmidi\DryWetMidi\Melanchall.DryWetMidi.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MaterialFader.Messages
 {
@@ -15,18 +17,18 @@ namespace MaterialFader.Messages
 
         public IMessage Parse(string msg)
         {
-            var parts = msg.Split(':', StringSplitOptions.None);
-            if (string.IsNullOrEmpty(parts[0]))
+            var typedMsg = JsonSerializer.Deserialize<TypedMessage>(msg);
+
+            if (typedMsg.Type == null)
             {
                 return null;
             }
 
-            var command = parts[0];
-            var arguments = parts[1..];
+            var command = typedMsg.Type;
 
-            foreach (var parser in _parsers.Where(mp => CommandMatches(mp, command) && ArgsMatch(mp, arguments)))
+            foreach (var parser in _parsers.Where(mp => CommandMatches(mp, command)))
             {
-                var message = parser.Parse(command, arguments);
+                var message = JsonSerializer.Deserialize(msg, parser.MessageType) as IMessage;
                 if (message != null)
                 {
                     return message;
@@ -39,7 +41,10 @@ namespace MaterialFader.Messages
         private static bool CommandMatches(IMessageParser mp, string cmd)
             => mp.Command == null || string.Equals(mp.Command, cmd, StringComparison.OrdinalIgnoreCase);
 
-        private static bool ArgsMatch(IMessageParser mp, string[] args) =>
-            mp.Arguments.IsWithinRange(args.Length);
+        private class TypedMessage
+        {
+            [JsonPropertyName("type")]
+            public string Type { get; set; }
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace MaterialFader
                 Channel = (FourBitNumber)1
             };
 
+            Console.WriteLine("Switching FaderPort to native mode.");
             _outputDevice.SendEvent(nativeEvent);
             ClearAllLights();
 
