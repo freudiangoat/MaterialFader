@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using MaterialFader.Messages;
@@ -41,9 +42,16 @@ namespace MaterialFader.StateHandlers
                 case IRadioMessage radioMessage:
                     _fp.AddRadioGroup(radioMessage.Name, radioMessage.Buttons);
                     break;
+                case ISetBindingsMessage setBindingsMessage:
+                    foreach (var btn in Enum.GetValues<FaderPortButton>())
+                    {
+                        _fp.SetLight(btn, setBindingsMessage.BoundButtons.Contains(btn) ? FaderPortLightState.On : FaderPortLightState.Off);
+                    }
+
+                    break;
             }
 
-            return _session.Broadcast("received");
+            return ValueTask.CompletedTask;
         }
 
         public Task LeaveState()
@@ -55,6 +63,7 @@ namespace MaterialFader.StateHandlers
         {
             if (evt.State == FaderPortButtonState.Released)
             {
+                _fp.SetLight(evt.Button, FaderPortLightState.Toggle);
                 return;
             }
 

@@ -28,7 +28,7 @@ namespace MaterialFader.Messages
 
             foreach (var parser in _parsers.Where(mp => CommandMatches(mp, command)))
             {
-                var message = JsonSerializer.Deserialize(msg, parser.MessageType) as IMessage;
+                var message = JsonSerializer.Deserialize(msg, parser.MessageType, WebSocketManager.JsonOpts) as IMessage;
                 if (message != null)
                 {
                     return message;

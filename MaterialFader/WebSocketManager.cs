@@ -12,12 +12,12 @@ namespace MaterialFader
 {
     public class WebSocketManager : ISessionHandler, IWebSocketSessionManager
     {
-        private static readonly JsonSerializerOptions _jsonOpts;
+        public static readonly JsonSerializerOptions JsonOpts;
 
         static WebSocketManager()
         {
-            _jsonOpts = new JsonSerializerOptions();
-            _jsonOpts.Converters.Add(new JsonStringEnumConverter(new LowerCaseNamingPolicy()));
+            JsonOpts = new JsonSerializerOptions();
+            JsonOpts.Converters.Add(new JsonStringEnumConverter(new LowerCaseNamingPolicy()));
         }
 
         private readonly ISet<IAppSession> _sessions = new HashSet<IAppSession>();
@@ -28,7 +28,7 @@ namespace MaterialFader
 
         public ValueTask Broadcast<T>(T msg)
         {
-            return Broadcast(JsonSerializer.Serialize(msg, _jsonOpts));
+            return Broadcast(JsonSerializer.Serialize(msg, JsonOpts));
         }
 
         public async ValueTask Broadcast(string msg)
