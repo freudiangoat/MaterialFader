@@ -1,0 +1,4 @@
+[submodule "drywetmidi"]
+	path = drywetmidi
+	url = https://github.com/freudiangoat/drywetmidi
+	branch = linux-devices

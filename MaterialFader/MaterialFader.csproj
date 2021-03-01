@@ -6,12 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Melanchall.DryWetMidi" Version="5.1.2" />-->
     <PackageReference Include="SuperSocket.WebSocketServer" Version="2.0.0-beta7" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\drywetmidi\DryWetMidi\Melanchall.DryWetMidi.csproj" />
+    <ProjectReference Include="..\drywetmidi\DryWetMidi\Melanchall.DryWetMidi.csproj" />
   </ItemGroup>
 
 </Project>
